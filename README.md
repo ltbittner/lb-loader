@@ -28,6 +28,11 @@ Start the load
 loader.startLoad();
 ```
 
+## functions      
+startLoad() : start the loading process    
+startBackgroundLoad() : start background load process - automatic if autoStartBackgroundLoad is set to true    
+resetAllCallbacks() : resets all of the callbacks
+
 # Example
 
 ```javascript
@@ -42,6 +47,8 @@ let loader = new Loader({
     backgroundCompletedCallback backgroundDone,
     autoStartBackgroundLoad: true
 });
+
+loader.startLoad();
 
 function preloadProgress(e) {
     //e contains three properties: completed, total, and percentage
@@ -60,6 +67,5 @@ function backgroundDone() {
     console.log("Background load done");
 }
 ```
-
 
 
