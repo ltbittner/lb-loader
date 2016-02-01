@@ -94,7 +94,7 @@ class TBLoader {
         this.preloadProgressHandler();
       })
       .catch(() => {
-        this.errorHandler();
+        this.errorHandler(asset.src);
       });
     }
   }
@@ -107,7 +107,7 @@ class TBLoader {
       })
       .catch((e) => {
         console.log(e);
-        this.errorHandler();
+        this.errorHandler(asset.src);
       });
     }
   }
@@ -197,9 +197,17 @@ class TBLoader {
     this.backgroundCompletedCallback = null;
   }
 
-  errorHandler() {
-    console.log("An error occured");
+  errorHandler(asset) {
+    this.abortLoad();
+    throw "Cannot find file " + asset;
   }
+
+  abortLoad() {
+    this.resetAllCallbacks();
+    this.preloadQueue = null;
+    this.backgroundQueue = null;
+  }
+
 }
 
 export default TBLoader;
