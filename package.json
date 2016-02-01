@@ -1,0 +1,22 @@
+{
+  "name": "loader",
+  "version": "1.0.0",
+  "description": "A background loader and preloader rolled into one",
+  "main": "src/loader.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ltbittner/Loader.git"
+  },
+  "keywords": [
+    "Loader",
+    "Preload",
+    "Background",
+    "Load"
+  ],
+  "author": "Logan Bittner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ltbittner/Loader/issues"
+  },
+  "homepage": "https://github.com/ltbittner/Loader#readme"
+}
