@@ -5,7 +5,7 @@ A preloader and background loader rolled into one.
 
 Require or include the library
 ```javascript
-import loader from 'path/to/loader'
+import Loader from 'path/to/loader'
 ```
 
 Create an instance of the loader
