@@ -1,0 +1,1 @@
+var Loader = require('../lib/index');
