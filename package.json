@@ -1,22 +1,22 @@
 {
-  "name": "loader",
+  "name": "lb-loader",
   "version": "1.0.0",
   "description": "A background loader and preloader rolled into one",
-  "main": "src/loader.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ltbittner/Loader.git"
+    "url": "git+https://github.com/ltbittner/lb-loader.git"
   },
   "keywords": [
-    "Loader",
-    "Preload",
-    "Background",
-    "Load"
+    "loader",
+    "preload",
+    "background",
+    "load"
   ],
   "author": "Logan Bittner",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ltbittner/Loader/issues"
+    "url": "https://github.com/ltbittner/lb-loader/issues"
   },
-  "homepage": "https://github.com/ltbittner/Loader#readme"
+  "homepage": "https://github.com/ltbittner/lb-loader"
 }
