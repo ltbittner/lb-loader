@@ -1,4 +1,5 @@
 let _loaderInstance = null;
+
 class TBLoader {
   constructor(args = null){
     //Make a singleton instance
