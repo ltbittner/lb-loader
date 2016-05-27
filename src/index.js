@@ -25,9 +25,9 @@ class LBLoader {
     }
   }
 
-  startLoad() {
-    if(this.preloadQueue){
-      this.startPreload();
+  startPreload() {
+    if(this.preloadQueue) {
+      this.load(this.preloadQueue, this.preloadCount, this.preloadProgressCallback);
     }
   }
 
@@ -55,11 +55,11 @@ class LBLoader {
     }
   }
 
-  startPreload() {
-    for(let asset of this.preloadQueue) {
-      var t = this.preloadAsset(asset.src, asset.type);
+  load(queue, count) {
+    for(let asset of queue) {
+      var t = this.loadAsset(asset.src, asset.type);
       t.then(() => {
-        this.preloadProgressHandler();
+        this.progressHandler(queue, count)
       })
       .catch(() => {
         this.errorHandler(asset.src);
@@ -67,20 +67,7 @@ class LBLoader {
     }
   }
 
-  startBackgroundLoad() {
-    for(let asset of this.backgroundQueue) {
-      var t = this.preloadAsset(asset.src, asset.type);
-      t.then(() => {
-        this.backgroundProgressHandler();
-      })
-      .catch((e) => {
-        console.log(e);
-        this.errorHandler(asset.src);
-      });
-    }
-  }
-
-  preloadAsset(path, type) {
+  loadAsset(path, type) {
     return new Promise((resolve, reject) => {
       let asset;
       if(type == 'image') {
@@ -103,26 +90,35 @@ class LBLoader {
     });
   }
 
-
-  preloadProgressHandler() {
-    this.numberOfPreloadedAssets++;
+  progressHandler(queue, count, handler) {
+    count++;
  
     if(this.preloadProgressCallback) {
-      let data = {
-        completed: this.numberOfPreloadedAssets,
-        total: this.totalNumberOfPreloadAssets,
-        percentage: Math.round(((this.numberOfPreloadedAssets / this.totalNumberOfPreloadAssets) * 100))
+      const data = {
+        completed: count,
+        total: queue.length,
+        percentage: Math.round(((count / queue.length) * 100))
       };
-
-      this.preloadProgressCallback(data);
+      // this.preloadProgressCallback(data);
+      handler(data);
     }
 
-    if(this.numberOfPreloadedAssets == this.totalNumberOfPreloadAssets) {
+    if(count == queue.length) {
       this.preloadCompletedHandler();
     }
   }
 
-  backgroundProgressHandler(progress) {
+  errorHandler(src) {
+    this.resetAllCallbacks();
+    this.preloadQueue = null;
+    this.backgroundQueue = null;
+    throw "Cannot find file " + src;
+  }
+
+
+
+
+  backgroundProgressHandler() {
     this.numberOfBackgroundAssets++;
  
     if(this.backgroundProgressCallback) {
@@ -153,13 +149,6 @@ class LBLoader {
       this.backgroundCompletedCallback();
     }
     this.resetAllCallbacks();
-  }
-
-  errorHandler(asset) {
-    this.resetAllCallbacks();
-    this.preloadQueue = null;
-    this.backgroundQueue = null;
-    throw "Cannot find file " + asset;
   }
 
   resetAllCallbacks() {
