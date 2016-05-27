@@ -4,7 +4,6 @@
 A preloader and background loader rolled into one.
 
 ### Install
-This module is used with Browserify or Webpack.
 ```sh
 npm install lb-loader
 ```
