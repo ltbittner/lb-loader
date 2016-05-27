@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>lb-loader</title>
+</head>
+<body>
+	<p>In this example, same files are being loaded multiple times by setting option <code>{dev: true}</code>.</p>
+	<p>Without the dev option, redundant files will be simply skipped.</p>
+	<hr>
+	<button id="load">load</button>
+	<p>Preloaded progress: <span id="pprogress">0</span>%</p>
+	<p>Background load progress: <span id="bprogress">0</span>%</p>
+	<p id="status"></p>
+	<script src="example.bundle.js"></script>
+</body>
+</html>
