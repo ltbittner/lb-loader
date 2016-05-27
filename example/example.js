@@ -7,7 +7,7 @@ var loader = new Loader({
 	preloadProgressCallback,
 	backgroundLoadProgressCallback,
 	backgroundLoadCompletedCallback,
-	dev: true
+	dev: true // option for testing only - avoids browser caching
 });
 
 document.getElementById('load').onclick = function() {
