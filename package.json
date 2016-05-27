@@ -1,7 +1,7 @@
 {
   "name": "lb-loader",
   "version": "1.0.0",
-  "description": "A background loader and preloader rolled into one",
+  "description": "A preloader and background loader rolled into one",
   "author": "Logan Bittner",
   "license": "MIT",
   "main": "index.js",
