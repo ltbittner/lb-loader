@@ -1,71 +1,51 @@
-# Loader
+# lb-loader
+[![npm version][npm-img]][npm-url]
+
 A preloader and background loader rolled into one.
 
-# Usage
-
-Require or include the library
-```javascript
-import Loader from 'path/to/loader'
+### Install
+This module is used with Browserify or Webpack.
+```sh
+npm install lb-loader
 ```
 
-Create an instance of the loader
-```javascript
-let loader = new Loader({options});
+### Example
+```sh
+git clone https://github.com/ltbittner/lb-loader.git
+cd lb-loader
+npm install
+npm start
 ```
+The example will run at http://localhost:3000. For more detailed example, please refer to [example.js](example/example.js).
 
-Options is an object with the following parameters:
+## Constructor
+An object with following keys are passed as a parameter:
+* `preload` (array, optional) - strings contain paths of the assets to be preloaded.
+* `preloadProgressCallback` (function, optional) - callback function when each asset is done preloading. Contains three properties:
+    * `index` - index of the asset that has been preloaded
+    * `total` - total number of assets in the preload queue
+    * `percentage` - index / total * 100
+* `preloadCompletedCallback` (function, optional) - callback function when all assets are done preloading.
+* `backgroundLoad` (array, optional) - strings contain paths of the assets to be loaded in background.
+* `backgroundLoadProgressCallback` (function, optional) - callback function when each asset is done loading in background. Contains three properties:
+    * `index` - index of the asset that has been loaded
+    * `total` - total number of assets in the background-load queue
+    * `percentage` - index / total * 100
+* `backgroundLoadCompletedCallback` (function, optional) - callback function when all assets are done loading in background.
+* `autoStartBackgroundLoad` (boolean, optional) - option to start background-load when preload is done. Default is `false`.
 
-**preload**: an array of strings with the path to the assets you wish to preload  
-**background load**: same as above, but path to assets you want loaded in the background after preload       
-**preloadProgressCallback**: function to call after each asset is preloaded       
-**preloadCompletedCallback**: function to call when all assets are preloaded              
-**backgroundProgressCallback**: function to call after each asset is background loaded       
-**backgroundCompletedCallback**: function to call when background loading is complete      
-**autoStartBackgroundLoad**: true or false | start background load as soon as preload is done? Default false
+## Methods
+### startPreload()
+Starts preloading. An error occurs if preload queue is empty.
 
-Start the load
-```javascript
-loader.startLoad();
-```
+### startBackgroundLoad()
+Starts background-loading. An error occurs if background-load queue is empty.
 
-## functions      
-startLoad() : start the loading process    
-startBackgroundLoad() : start background load process - automatic if autoStartBackgroundLoad is set to true    
-resetAllCallbacks() : resets all of the callbacks
+### destroy()
+Cleans everything and destroys the loader instance. This method is called automatically when all loading sequences are completed.
 
-# Example
+## License
+MIT - please refer to [LICENSE](LICENSE).
 
-```javascript
-import Loader from 'path/to/loader';
-
-let loader = new Loader({
-    preload: ['assets/image1.jpg', 'assets/image2.jpg', 'assets/video1.mp4'],
-    backgroundLoad: ['assets,image3.jpg', 'assets/video2.webm'],
-    preloadProgressCallback: preloadProgress,
-    preloadCompletedCallback: preloadDone,
-    backgroundProgressCallback: backgroundProgress,
-    backgroundCompletedCallback backgroundDone,
-    autoStartBackgroundLoad: true
-});
-
-loader.startLoad();
-
-function preloadProgress(e) {
-    //e contains three properties: completed, total, and percentage
-    console.log("Done " + e.percentage + "% of preload");
-}
-
-function preloadDone() {
-    console.log("Preload done");
-}
-
-function backgroundProgress(e) {
-    console.log("Done " + e.percentage + "% of background load");
-}
-
-function backgroundDone() {
-    console.log("Background load done");
-}
-```
-
-
+[npm-url]: https://www.npmjs.org/package/lb-loader
+[npm-img]: https://img.shields.io/npm/v/lb-loader.svg

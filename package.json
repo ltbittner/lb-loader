@@ -4,7 +4,7 @@
   "description": "A preloader and background loader rolled into one",
   "author": "Logan Bittner",
   "license": "MIT",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "node ./example/server.js",
     "compile": "babel -d lib/ src/",

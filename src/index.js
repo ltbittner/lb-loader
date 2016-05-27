@@ -115,7 +115,7 @@ class LBLoader {
 
   progressHandler(queue, count, progressCallback) {
     progressCallback({
-      completed: count,
+      index: count,
       total: queue.length,
       percentage: Math.round(((count / queue.length) * 100))
     });
