@@ -6,7 +6,8 @@ var loader = new Loader({
 	autoStartBackgroundLoad: true,
 	preloadProgressCallback,
 	backgroundLoadProgressCallback,
-	backgroundLoadCompletedCallback
+	backgroundLoadCompletedCallback,
+	dev: true
 });
 
 document.getElementById('load').onclick = function() {

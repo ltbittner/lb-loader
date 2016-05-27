@@ -35,6 +35,8 @@ class LBLoader {
       };
       this.initializeQueue(args.backgroundLoad, this.backgroundLoadQueue);
     }
+
+    this.dev = args.dev || false;
   }
 
   startPreload() {
@@ -102,7 +104,7 @@ class LBLoader {
       asset.onload = resolve;
       asset.onerror = reject;
       asset.src = src;
-      if(process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      if(this.dev) {
         asset.src = src + "?_=" + (new Date().getTime());
       }
       if(type == 'video') {
