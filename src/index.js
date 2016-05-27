@@ -144,7 +144,7 @@ class LBLoader {
       asset.onerror = reject;
       asset.src = src;
       if(this.dev) {
-        asset.src = src + "?_=" + (new Date().getTime());
+        asset.src = src + '?_=' + (new Date().getTime());
       }
       if(type == 'video') {
         asset.load();
