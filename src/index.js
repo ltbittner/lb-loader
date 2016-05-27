@@ -55,11 +55,12 @@ class LBLoader {
     }
   }
 
-  load(queue, count) {
+  load(queue, count, handler) {
     for(let asset of queue) {
       var t = this.loadAsset(asset.src, asset.type);
       t.then(() => {
-        this.progressHandler(queue, count)
+        handler(queue, count);
+        // this.progressHandler(queue, count)
       })
       .catch(() => {
         this.errorHandler(asset.src);
@@ -120,8 +121,7 @@ class LBLoader {
 
   backgroundProgressHandler() {
     this.numberOfBackgroundAssets++;
- 
-    if(this.backgroundProgressCallback) {
+g    if(this.backgroundProgressCallback) {
       let data = {
         completed: this.numberOfBackgroundAssets,
         total: this.totalNumberOfBackgroundAssets,
