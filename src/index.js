@@ -102,6 +102,9 @@ class LBLoader {
       asset.onload = resolve;
       asset.onerror = reject;
       asset.src = src;
+      if(process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        asset.src = src + "?_=" + (new Date().getTime());
+      }
       if(type == 'video') {
         asset.load();
       }

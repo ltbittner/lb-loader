@@ -6,8 +6,13 @@
 	<title>lb-loader</title>
 </head>
 <body>
-	<p>Loaded files:</p>
-	<p id='files'></p>
-	<script src='example.bundle.js'></script>
+	<p>For the sake of example, same file will be loaded multiple times.</p>
+	<p>When you use the npm module, however, redundant files will be simply skipped.</p>
+	<hr>
+	<button id="load">load</button>
+	<p>Preloaded progress: <span id="pprogress">0</span>%</p>
+	<p>Background load progress: <span id="bprogress">0</span>%</p>
+	<p id="status"></p>
+	<script src="example.bundle.js"></script>
 </body>
 </html>
