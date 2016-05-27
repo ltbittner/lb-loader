@@ -15,7 +15,7 @@ cd lb-loader
 npm install
 npm start
 ```
-The example will run at http://localhost:3000. For more detailed example, please refer to [example.js](example/example.js).
+The example will run at http://localhost:3000. For source code of the example, please refer to [example.js](example/example.js).
 
 ## Constructor
 An object with following keys are passed as a parameter:
