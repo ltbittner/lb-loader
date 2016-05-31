@@ -16,14 +16,15 @@ class LBLoader {
         this.throwTypeError('preload', 'array');
       }
 
-      this.preloadProgressCallback = () => {
+      this.preloadProgressCallback = (props) => {
         if(this.isValid(args.preloadProgressCallback, 'function')) {
-          args.preloadProgressCallback();
+          args.preloadProgressCallback(props);
         } 
         else if(args.preloadProgressCallback){
           this.throwTypeError('preloadProgressCallback', 'function');
         }
       };
+
 
       this.preloadCompletedCallback = () => {
         if(this.isValid(args.preloadCompletedCallback, 'function')) {
@@ -53,9 +54,9 @@ class LBLoader {
         this.throwTypeError('backgroundLoad', 'array');
       }
 
-      this.backgroundLoadProgressCallback = () => {
+      this.backgroundLoadProgressCallback = (props) => {
         if(this.isValid(args.backgroundLoadProgressCallback, 'function')) {
-          args.backgroundLoadProgressCallback();
+          args.backgroundLoadProgressCallback(props);
         } else if(args.backgroundLoadProgressCallback){
           this.throwTypeError('backgroundLoadProgressCallback', 'function');
         }
@@ -104,9 +105,7 @@ class LBLoader {
       if(type) {
         queue.push({ type, src });
       } else {
-        this.destroy();
         console.error(new Error('Unable to handle \'' + src + '\'. File format is not supported.'));
-        return;
       }
     }
   }
@@ -116,13 +115,13 @@ class LBLoader {
     for(let asset of queue) {
       this.loadAsset(asset.src, asset.type).then(() => {
         count++;
-        // this.progressHandler(queue, count, progressCallback);
+        this.progressHandler(queue, count, progressCallback);
         if(count == queue.length) {
           completeCallback();
         }
       }).catch(() => {
-        // this.errorHandler(asset.src);
-        console.error(new Error('catch'));
+          count++;
+          console.error(new Error('Error in loading \'' + asset.src + '\'.'));
       });
     }
   }
@@ -137,10 +136,7 @@ class LBLoader {
         asset.addEventListener('suspend', resolve);
       }
       asset.onload = resolve;
-      asset.onerror = () => {
-        this.destroy();
-        console.error(new Error('\'' + src + '\' is not found.'));
-      }
+      asset.onerror = reject;
       asset.src = src;
       if(this.dev) {
         asset.src = src + '?_=' + (new Date().getTime());
