@@ -8,19 +8,19 @@ class LBLoader {
     instance = this;
 
     if(args.preload) {
-      this.preloadQueue = () => {
-        if(this.isValid(args.preload, 'array')) {
-          return args.preload;
-        } else {
-          this.throwTypeError('preload', 'array');
-          return null;
-        }
-      };
+      this.preloadQueue = [];
+      if(this.isValid(args.preload, 'array')) {
+        // this.preloadQueue = args.preload;
+        this.initializeQueue(args.preload, this.preloadQueue);
+      } else {
+        this.throwTypeError('preload', 'array');
+      }
 
       this.preloadProgressCallback = () => {
         if(this.isValid(args.preloadProgressCallback, 'function')) {
           args.preloadProgressCallback();
-        } else if(args.preloadProgressCallback){
+        } 
+        else if(args.preloadProgressCallback){
           this.throwTypeError('preloadProgressCallback', 'function');
         }
       };
@@ -42,19 +42,16 @@ class LBLoader {
           this.destroy();
         }
       };
-
-      this.initializeQueue(args.preload, this.preloadQueue);
     }
 
     if(args.backgroundLoad) {
-      this.backgroundLoadQueue = () => {
-        if(this.isValid(args.backgroundLoad, 'array')) {
-          return args.backgroundLoad;
-        } else {
-          this.throwTypeError('backgroundLoad', 'array');
-          return null;
-        }
-      };
+      this.backgroundLoadQueue = [];
+      if(this.isValid(args.backgroundLoad, 'array')) {
+        // this.backgroundLoadQueue = args.backgroundLoad;
+        this.initializeQueue(args.backgroundLoad, this.backgroundLoadQueue);
+      } else {
+        this.throwTypeError('backgroundLoad', 'array');
+      }
 
       this.backgroundLoadProgressCallback = () => {
         if(this.isValid(args.backgroundLoadProgressCallback, 'function')) {
@@ -73,8 +70,6 @@ class LBLoader {
 
         this.destroy();
       };
-
-      this.initializeQueue(args.backgroundLoad, this.backgroundLoadQueue);
     }
 
     this.dev = args.dev || false;
@@ -121,12 +116,13 @@ class LBLoader {
     for(let asset of queue) {
       this.loadAsset(asset.src, asset.type).then(() => {
         count++;
-        this.progressHandler(queue, count, progressCallback);
+        // this.progressHandler(queue, count, progressCallback);
         if(count == queue.length) {
           completeCallback();
         }
       }).catch(() => {
-        this.errorHandler(asset.src);
+        // this.errorHandler(asset.src);
+        console.error(new Error('catch'));
       });
     }
   }
@@ -141,7 +137,10 @@ class LBLoader {
         asset.addEventListener('suspend', resolve);
       }
       asset.onload = resolve;
-      asset.onerror = reject;
+      asset.onerror = () => {
+        this.destroy();
+        console.error(new Error('\'' + src + '\' is not found.'));
+      }
       asset.src = src;
       if(this.dev) {
         asset.src = src + '?_=' + (new Date().getTime());
@@ -158,11 +157,6 @@ class LBLoader {
       total: queue.length,
       percentage: Math.round(((count / queue.length) * 100))
     });
-  }
-
-  errorHandler(src) {
-    this.destroy();
-    console.error(new Error('\'' + src + '\' is not found.'));
   }
 
   destroy() {

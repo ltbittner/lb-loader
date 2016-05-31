@@ -30,6 +30,7 @@ function getAssets() {
 	// In this example, same files are being loaded multiple times by setting option {dev: true}.
 	// Without the dev option, redundant files will be simply skipped.
 	return [
+		'assets/no.jpg',
 		'assets/1.jpg', 'assets/2.jpg', 'assets/3.jpg', 'assets/4.jpg', 'assets/5.jpg',
 		'assets/1.jpg', 'assets/2.jpg', 'assets/3.jpg', 'assets/4.jpg', 'assets/5.jpg',
 		'assets/1.jpg', 'assets/2.jpg', 'assets/3.jpg', 'assets/4.jpg', 'assets/5.jpg',
