@@ -9,66 +9,71 @@ class LBLoader {
 
     if(args.preload) {
       this.preloadQueue = [];
+
       if(this.isValid(args.preload, 'array')) {
-        // this.preloadQueue = args.preload;
         this.initializeQueue(args.preload, this.preloadQueue);
       } else {
         this.throwTypeError('preload', 'array');
       }
 
-      this.preloadProgressCallback = (props) => {
-        if(this.isValid(args.preloadProgressCallback, 'function')) {
-          args.preloadProgressCallback(props);
-        } 
-        else if(args.preloadProgressCallback){
-          this.throwTypeError('preloadProgressCallback', 'function');
-        }
-      };
+      this.preloadProgressCallback = () => null;
+      if(this.isValid(args.preloadProgressCallback, 'function')) {
+        this.preloadProgressCallback = args.preloadProgressCallback;
+      } else if(args.preloadProgressCallback) {
+        this.throwTypeError('preloadProgressCallback', 'function');
+      }
 
+      let f1 = () => null;
+      if(this.isValid(args.preloadCompletedCallback, 'function')) {
+        f1 = args.preloadCompletedCallback;
+      } else if(args.preloadCompletedCallback) {
+        this.throwTypeError('preloadCompletedCallback', 'function');
+      }
+
+      let f2 = () => null;
+      if(args.autoStartBackgroundLoad === true) {
+        f2 = this.startBackgroundLoad.bind(this);
+      } else if(args.autoStartBackgroundLoad && !this.isValid(args.autoStartBackgroundLoad, 'boolean')) {
+        this.throwTypeError('autoStartBackgroundLoad', 'boolean');
+      }
+
+      let f3 = () => null;
+      if(!this.isValid(args.backgroundLoad, 'array')) {
+        f3 = this.destroy.bind(this);
+      }
 
       this.preloadCompletedCallback = () => {
-        if(this.isValid(args.preloadCompletedCallback, 'function')) {
-          args.preloadCompletedCallback();
-        } else if(args.preloadCompletedCallback) {
-          this.throwTypeError('preloadCompletedCallback', 'function');
-        }
-
-        if(args.autoStartBackgroundLoad === true) {
-          this.startBackgroundLoad();
-        } else if(!this.isValid(args.autoStartBackgroundLoad, 'boolean')) {
-          this.throwTypeError('autoStartBackgroundLoad', 'boolean');
-        }
-
-        if(!this.isValid(args.backgroundLoad, 'array')) {
-          this.destroy();
-        }
+        f1();
+        f2();
+        f3();
       };
     }
 
     if(args.backgroundLoad) {
       this.backgroundLoadQueue = [];
+
       if(this.isValid(args.backgroundLoad, 'array')) {
-        // this.backgroundLoadQueue = args.backgroundLoad;
         this.initializeQueue(args.backgroundLoad, this.backgroundLoadQueue);
       } else {
         this.throwTypeError('backgroundLoad', 'array');
       }
 
-      this.backgroundLoadProgressCallback = (props) => {
-        if(this.isValid(args.backgroundLoadProgressCallback, 'function')) {
-          args.backgroundLoadProgressCallback(props);
-        } else if(args.backgroundLoadProgressCallback){
-          this.throwTypeError('backgroundLoadProgressCallback', 'function');
-        }
-      };
+      this.backgroundLoadProgressCallback = () => null;
+      if(this.isValid(args.backgroundLoadProgressCallback, 'function')) {
+        this.backgroundLoadProgressCallback = args.backgroundLoadProgressCallback;
+      } else if(args.backgroundLoadProgressCallback) {
+        this.throwTypeError('backgroundLoadProgressCallback', 'function');
+      }
+
+      let f1 = () => null;
+      if(this.isValid(args.backgroundLoadCompletedCallback, 'function')) {
+        f1 = args.backgroundLoadCompletedCallback;
+      } else if(args.backgroundLoadCompletedCallback) {
+        this.throwTypeError('backgroundLoadCompletedCallback', 'function');
+      }
 
       this.backgroundLoadCompletedCallback = () => {
-        if(this.isValid(args.backgroundLoadCompletedCallback, 'function')) {
-          args.backgroundLoadCompletedCallback();
-        } else if(args.backgroundLoadCompletedCallback){
-          this.throwTypeError('backgroundLoadCompletedCallback', 'function');
-        }
-
+        f1();
         this.destroy();
       };
     }
@@ -120,8 +125,8 @@ class LBLoader {
           completeCallback();
         }
       }).catch(() => {
-          count++;
-          console.error(new Error('Error in loading \'' + asset.src + '\'.'));
+        count++;
+        console.error(new Error('Error in loading \'' + asset.src + '\'.'));
       });
     }
   }
@@ -157,8 +162,8 @@ class LBLoader {
 
   destroy() {
     this.preloadQueue = [];
-    this.preloadProgressCallback =  null;
-    this.preloadCompletedCallback =  null;
+    this.preloadProgressCallback = null;
+    this.preloadCompletedCallback = null;
     this.backgroundLoadQueue = [];
     this.backgroundProgressCallback = null;
     this.backgroundCompletedCallback = null;
