@@ -22,7 +22,7 @@ function backgroundLoadProgressCallback(e) {
 	document.getElementById('bprogress').innerHTML = e.percentage;
 };
 
-function backgroundLoadCompletedCallback(e) {
+function backgroundLoadCompletedCallback() {
 	document.getElementById('status').innerHTML = 'All assets loaded.';
 };
 

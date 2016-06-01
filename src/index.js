@@ -9,31 +9,73 @@ class LBLoader {
 
     if(args.preload) {
       this.preloadQueue = [];
-      this.preloadProgressCallback = args.preloadProgressCallback || null;
+
+      if(this.isValid(args.preload, 'array')) {
+        this.initializeQueue(args.preload, this.preloadQueue);
+      } else {
+        this.throwTypeError('preload', 'array');
+      }
+
+      this.preloadProgressCallback = () => null;
+      if(this.isValid(args.preloadProgressCallback, 'function')) {
+        this.preloadProgressCallback = args.preloadProgressCallback;
+      } else if(args.preloadProgressCallback) {
+        this.throwTypeError('preloadProgressCallback', 'function');
+      }
+
+      let f1 = () => null;
+      if(this.isValid(args.preloadCompletedCallback, 'function')) {
+        f1 = args.preloadCompletedCallback;
+      } else if(args.preloadCompletedCallback) {
+        this.throwTypeError('preloadCompletedCallback', 'function');
+      }
+
+      let f2 = () => null;
+      if(args.autoStartBackgroundLoad === true) {
+        f2 = this.startBackgroundLoad.bind(this);
+      } else if(args.autoStartBackgroundLoad && !this.isValid(args.autoStartBackgroundLoad, 'boolean')) {
+        this.throwTypeError('autoStartBackgroundLoad', 'boolean');
+      }
+
+      let f3 = () => null;
+      if(!this.isValid(args.backgroundLoad, 'array')) {
+        f3 = this.destroy.bind(this);
+      }
+
       this.preloadCompletedCallback = () => {
-        if(args.preloadCompletedCallback) {
-          args.preloadCompletedCallback();
-        }
-        if(args.autoStartBackgroundLoad === true) {
-          this.startBackgroundLoad();
-        }
-        if(!args.backgroundLoad) {
-          this.destroy();
-        }
+        f1();
+        f2();
+        f3();
       };
-      this.initializeQueue(args.preload, this.preloadQueue);
     }
 
     if(args.backgroundLoad) {
       this.backgroundLoadQueue = [];
-      this.backgroundLoadProgressCallback = args.backgroundLoadProgressCallback || null;
+
+      if(this.isValid(args.backgroundLoad, 'array')) {
+        this.initializeQueue(args.backgroundLoad, this.backgroundLoadQueue);
+      } else {
+        this.throwTypeError('backgroundLoad', 'array');
+      }
+
+      this.backgroundLoadProgressCallback = () => null;
+      if(this.isValid(args.backgroundLoadProgressCallback, 'function')) {
+        this.backgroundLoadProgressCallback = args.backgroundLoadProgressCallback;
+      } else if(args.backgroundLoadProgressCallback) {
+        this.throwTypeError('backgroundLoadProgressCallback', 'function');
+      }
+
+      let f1 = () => null;
+      if(this.isValid(args.backgroundLoadCompletedCallback, 'function')) {
+        f1 = args.backgroundLoadCompletedCallback;
+      } else if(args.backgroundLoadCompletedCallback) {
+        this.throwTypeError('backgroundLoadCompletedCallback', 'function');
+      }
+
       this.backgroundLoadCompletedCallback = () => {
-        if(args.backgroundLoadCompletedCallback) {
-          args.backgroundLoadCompletedCallback();
-        }
+        f1();
         this.destroy();
       };
-      this.initializeQueue(args.backgroundLoad, this.backgroundLoadQueue);
     }
 
     this.dev = args.dev || false;
@@ -68,9 +110,7 @@ class LBLoader {
       if(type) {
         queue.push({ type, src });
       } else {
-        this.destroy();
         console.error(new Error('Unable to handle \'' + src + '\'. File format is not supported.'));
-        return;
       }
     }
   }
@@ -80,14 +120,13 @@ class LBLoader {
     for(let asset of queue) {
       this.loadAsset(asset.src, asset.type).then(() => {
         count++;
-        if(progressCallback) {
-          this.progressHandler(queue, count, progressCallback);  
-        }
+        this.progressHandler(queue, count, progressCallback);
         if(count == queue.length) {
           completeCallback();
         }
       }).catch(() => {
-        this.errorHandler(asset.src);
+        count++;
+        console.error(new Error('Error in loading \'' + asset.src + '\'.'));
       });
     }
   }
@@ -105,7 +144,7 @@ class LBLoader {
       asset.onerror = reject;
       asset.src = src;
       if(this.dev) {
-        asset.src = src + "?_=" + (new Date().getTime());
+        asset.src = src + '?_=' + (new Date().getTime());
       }
       if(type == 'video') {
         asset.load();
@@ -121,19 +160,22 @@ class LBLoader {
     });
   }
 
-  errorHandler(src) {
-    this.destroy();
-    console.error(new Error('\'' + src + '\' is not found.'));
-  }
-
   destroy() {
     this.preloadQueue = [];
-    this.preloadProgressCallback =  null;
-    this.preloadCompletedCallback =  null;
+    this.preloadProgressCallback = null;
+    this.preloadCompletedCallback = null;
     this.backgroundLoadQueue = [];
     this.backgroundProgressCallback = null;
     this.backgroundCompletedCallback = null;
     instance = null;
+  }
+
+  isValid(e, type) {
+    return {}.toString.call(e).toLowerCase().indexOf(type) > -1;
+  }
+
+  throwTypeError(e, type) {
+    console.error(new TypeError('Type of ' + e + ' must be ' + type + '.'));
   }
 }
 
