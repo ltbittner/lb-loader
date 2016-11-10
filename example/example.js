@@ -7,6 +7,7 @@ var loader = new Loader({
 	preloadProgressCallback,
 	backgroundLoadProgressCallback,
 	backgroundLoadCompletedCallback,
+	sequential: true,
 	dev: true // option for testing only - avoids browser caching
 });
 

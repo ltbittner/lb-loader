@@ -1,6 +1,6 @@
 {
   "name": "lb-loader",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A preloader and background loader rolled into one",
   "author": "Logan Bittner",
   "license": "MIT",

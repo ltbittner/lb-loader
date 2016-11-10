@@ -32,6 +32,7 @@ An object with following keys are passed as a parameter:
     * `percentage` - index / total * 100
 * `backgroundLoadCompletedCallback` (function, optional) - callback function when all assets are done loading in background.
 * `autoStartBackgroundLoad` (boolean, optional) - option to start background-load when preload is done. Default is `false`.
+* `sequential` (boolean, optional) - Set to true if you want to wait for the current asset to finish loading before the next one. Default is `false`.
 
 ## Methods
 ### startPreload()
